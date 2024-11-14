@@ -1,0 +1,27 @@
+paths:
+  /api/users/{uid}:
+    put:
+      summary: Actualizar usuario
+      description: Update a user
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          description: User ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: User updated successfully
+        400:
+          description: Invalid input
+        404:
+          description: User not found
