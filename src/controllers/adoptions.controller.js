@@ -21,6 +21,7 @@ export class AdoptionsController {
   getAdoption = async (req, res, next) => {
     try {
       const adoptionId = req.params.aid;
+      console.log("ADOPTIONID CONTROLLER:", req.params.aid);
       const adoption = await this.adoptionsService.getById(adoptionId);
       if (!adoption) return res.status(404).send({ status: "error", error: "Adoption not found" });
       res.send({ status: "success", payload: adoption });
@@ -41,7 +42,7 @@ export class AdoptionsController {
       await this.usersService.update(user._id, { pets: user.pets });
       await this.petsService.update(pet._id, { adopted: true, owner: user._id });
       let adoption = await this.adoptionsService.create({ owner: user._id, pet: pet._id });
-      res.status(200).send({ status: "success", message: "Pet adopted", body: adoption });
+      res.status(200).send({ status: "success", message: "Pet adopted", payload: adoption });
     } catch (error) {
       next(error);
     }

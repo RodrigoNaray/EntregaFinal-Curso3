@@ -9,8 +9,8 @@ export class AdoptionServices {
     return adoptions;
   }
   async getById(id) {
-    const adoption = await this.adoptionDao.getBy(id);
-    if (!adoption) throw customError.notFoundError(`Adoption id ${id} not found`);
+    const adoption = await this.adoptionDao.getBy({_id: id});
+    if (!adoption) throw console.log(`Adoption id ${id} not found`);
     return adoption;
   }
 

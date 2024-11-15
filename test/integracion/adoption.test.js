@@ -36,19 +36,20 @@ describe("Test de integración Adoptions", () => {
   });
 
   it("[POST] /api/adoptions/:uid/:pid - Debe crear una nueva adopción", async () => {
-    const { status, adoption } = await adoptionRequest.post(`/${testUser._id}/${testPet._id}`);
+    const { status, body } = await adoptionRequest.post(`/${testUser._id}/${testPet._id}`);
     if (status !== 200) {
-      console.error("Error creating adoption:", adoption);
+      console.error("Error creating adoption:", body);
     }
-    console.log("Created Adoption:", adoption);
-    testAdoption = adoption;
+    testAdoption = body.payload;
     expect(status).to.be.equal(200);
-    expect(adoption.body).to.be.an("object");
-    expect(adoption.body.owner).to.be.equal(testUser._id);
-    expect(adoption.body.pet).to.be.equal(testPet._id);
+    expect(body.payload).to.be.an("object");
+    expect(body.payload.owner).to.be.equal(testUser._id);
+    expect(body.payload.pet).to.be.equal(testPet._id);
   });
 
   it("[GET] /api/adoptions/:aid - Debe devolver una adopción por su id", async () => {
+    console.log("Test Adoption:", testAdoption , testAdoption._id);
+    
     if (!testAdoption || !testAdoption._id) {
       throw new Error("testAdoption is not defined or has no _id");
     }
@@ -60,7 +61,9 @@ describe("Test de integración Adoptions", () => {
 
   after(async () => {
     // Limpiar los datos de prueba
-    await adoptionRequest.delete(`/${testAdoption._id}`);
+    if (testAdoption && testAdoption._id) {
+      await adoptionRequest.delete(`/${testAdoption._id}`);
+    }
     await userRequest.delete(`/${testUser._id}`);
     await petRequest.delete(`/${testPet._id}`);
     
