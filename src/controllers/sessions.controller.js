@@ -28,7 +28,7 @@ export class SessionsController {
         password: hashedPassword,
       };
       let result = await this.userServices.create(user);
-      res.status(201).json({ status: "success", payload: result });
+      res.status(200).json({ status: "success", payload: result });
     } catch (error) {
       next(error);
     }

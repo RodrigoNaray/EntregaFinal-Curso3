@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "node --watch src/app.js",
+    "dev": "npx nodemon src/app.js",
     "test": "mocha 'test/**/*.test.js'"
   },
   "keywords": [],
@@ -27,6 +27,7 @@
     "@faker-js/faker": "^9.0.1",
     "chai": "^4.5.0",
     "mocha": "^10.7.3",
+    "nodemon": "^3.1.7",
     "supertest": "^7.0.0"
   }
 }

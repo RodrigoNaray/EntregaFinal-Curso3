@@ -20,7 +20,7 @@ describe("Test de integración Pets", () => {
     };
     const { status, body } = await request.post("/").send(newPet);
     testPet = body.payload;
-    expect(status).to.be.equal(201);
+    expect(status).to.be.equal(200);
     expect(body.payload).to.be.an("object");
     expect(body.payload.name).to.be.equal("Pet Test");
     expect(body.payload.specie).to.be.equal("Gato");

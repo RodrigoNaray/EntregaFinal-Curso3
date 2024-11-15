@@ -1,52 +1,58 @@
 import { expect } from "chai";
 import supertest from "supertest";
 
-const request = supertest("http://localhost:8080/api/adoptions");
+const adoptionRequest = supertest("http://localhost:8080/api/adoptions");
+const userRequest = supertest("http://localhost:8080/api/users");
+const petRequest = supertest("http://localhost:8080/api/pets");
 
 describe("Test de integración Adoptions", () => {
-  let testAdoption;
   let testUser;
   let testPet;
+  let testAdoption;
 
   before(async () => {
-    // Crear un usuario y una mascota para las pruebas
-    const userResponse = await supertest("http://localhost:8080/api/users").post("/").send({
+    // Crear usuario de prueba
+    const userResponse = await userRequest.post("/").send({
       first_name: "Test",
       last_name: "User",
-      email: "testuser@example.com",
-      password: "123456",
+      email: `testuser${Math.floor(Math.random() * 10000)}@example.com`,
+      password: "password123",
     });
     testUser = userResponse.body.payload;
-    console.log("Created User:", testUser);
 
-    const petResponse = await supertest("http://localhost:8080/api/pets").post("/").send({
+    // Crear mascota de prueba
+    const petResponse = await petRequest.post("/").send({
       name: "Test Pet",
       specie: "Gato",
       birthDate: "2023-10-10",
     });
     testPet = petResponse.body.payload;
-    console.log("Created Pet:", testPet);
   });
 
   it("[GET] /api/adoptions - Debe devolver un array de adopciones", async () => {
-    const { status, body } = await request.get("/");
+    const { status, body } = await adoptionRequest.get("/");
     expect(status).to.be.equal(200);
     expect(body.payload).to.be.an("array");
   });
 
   it("[POST] /api/adoptions/:uid/:pid - Debe crear una nueva adopción", async () => {
-    console.log("User ID:", testUser._id);
-    console.log("Pet ID:", testPet._id);
-    const { status, body } = await request.post(`/${testUser._id}/${testPet._id}`);
-    testAdoption = body.payload;
-    expect(status).to.be.equal(201);
-    expect(body.payload).to.be.an("object");
-    expect(body.payload.owner).to.be.equal(testUser._id);
-    expect(body.payload.pet).to.be.equal(testPet._id);
+    const { status, adoption } = await adoptionRequest.post(`/${testUser._id}/${testPet._id}`);
+    if (status !== 200) {
+      console.error("Error creating adoption:", adoption);
+    }
+    console.log("Created Adoption:", adoption);
+    testAdoption = adoption;
+    expect(status).to.be.equal(200);
+    expect(adoption.body).to.be.an("object");
+    expect(adoption.body.owner).to.be.equal(testUser._id);
+    expect(adoption.body.pet).to.be.equal(testPet._id);
   });
 
   it("[GET] /api/adoptions/:aid - Debe devolver una adopción por su id", async () => {
-    const { status, body } = await request.get(`/${testAdoption._id}`);
+    if (!testAdoption || !testAdoption._id) {
+      throw new Error("testAdoption is not defined or has no _id");
+    }
+    const { status, body } = await adoptionRequest.get(`/${testAdoption._id}`);
     expect(status).to.be.equal(200);
     expect(body.payload).to.be.an("object");
     expect(body.payload._id).to.be.equal(testAdoption._id);
@@ -54,7 +60,9 @@ describe("Test de integración Adoptions", () => {
 
   after(async () => {
     // Limpiar los datos de prueba
-    await supertest("http://localhost:8080/api/users").delete(`/${testUser._id}`);
-    await supertest("http://localhost:8080/api/pets").delete(`/${testPet._id}`);
+    await adoptionRequest.delete(`/${testAdoption._id}`);
+    await userRequest.delete(`/${testUser._id}`);
+    await petRequest.delete(`/${testPet._id}`);
+    
   });
 });

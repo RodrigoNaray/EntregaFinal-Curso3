@@ -10,7 +10,7 @@ export class UserControllers {
   createUserMock = async (req, res) => {
     const users = await this.userServices.createMocks();
 
-    res.status(201).json({ status: "ok", users });
+    res.status(200).json({ status: "ok", users });
   };
 
   getAllUsers = async (req, res, next) => {
@@ -34,6 +34,17 @@ export class UserControllers {
       next(error);
     }
   };
+
+  createUser = async (req, res) => {
+    try {
+      const userBody = req.body;
+      const newUser = await this.userServices.create(userBody);
+      res.status(200).send({ status: "success", payload: newUser });
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+      res.status(500).send({ status: "error", error: error.message });
+    }
+  }; 
 
   updateUser = async (req, res) => {
     const updateBody = req.body;

@@ -11,7 +11,7 @@ export class PetsController {
   getAllPets = async (req, res, next) => {
     try {
       const pets = await this.petService.getAll();
-      res.send({ status: "success", payload: pets });
+      res.status(200).send({ status: "success", payload: pets });
     } catch (error) {
       next(error);
     }
@@ -23,7 +23,7 @@ export class PetsController {
       if (!name || !specie || !birthDate) return res.status(400).send({ status: "error", error: "Incomplete values" });
       const pet = PetDTO.getPetInputFrom({ name, specie, birthDate });
       const result = await this.petService.create(pet);
-      res.status(201).json({ status: "success", payload: result });
+      res.status(200).json({ status: "success", payload: result });
     } catch (error) {
       next(error);
     }
@@ -34,7 +34,7 @@ export class PetsController {
       const petUpdateBody = req.body;
       const petId = req.params.pid;
       const result = await this.petService.update(petId, petUpdateBody);
-      res.send({ status: "success", payload: result});
+      res.status(200).send({ status: "success", payload: result});
     } catch (error) {
       next(error);
     }
@@ -44,7 +44,7 @@ export class PetsController {
     try {
       const petId = req.params.pid;
       const result = await this.petService.remove(petId);
-      res.send({ status: "success", message: "pet deleted" });
+      res.status(200).send({ status: "success", message: "pet deleted" });
     } catch (error) {
       next(error);
     }
@@ -64,7 +64,7 @@ export class PetsController {
       });
       console.log(pet);
       const result = await petsService.create(pet);
-      res.send({ status: "success", payload: result });
+      res.status(200).send({ status: "success", payload: result });
     } catch (error) {
       next(error);
     }
