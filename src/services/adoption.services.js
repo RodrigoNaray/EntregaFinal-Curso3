@@ -16,7 +16,6 @@ export class AdoptionServices {
 
   async create(data) {
     const adoption = await this.adoptionDao.save(data);
-    console.log("HEREEEE  Adoption created:", adoption);
     return adoption;
   }
 

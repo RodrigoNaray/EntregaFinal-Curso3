@@ -48,8 +48,6 @@ describe("Test de integración Adoptions", () => {
   });
 
   it("[GET] /api/adoptions/:aid - Debe devolver una adopción por su id", async () => {
-    console.log("Test Adoption:", testAdoption , testAdoption._id);
-    
     if (!testAdoption || !testAdoption._id) {
       throw new Error("testAdoption is not defined or has no _id");
     }

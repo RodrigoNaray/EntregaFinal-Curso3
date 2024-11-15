@@ -21,7 +21,6 @@ export class AdoptionsController {
   getAdoption = async (req, res, next) => {
     try {
       const adoptionId = req.params.aid;
-      console.log("ADOPTIONID CONTROLLER:", req.params.aid);
       const adoption = await this.adoptionsService.getById(adoptionId);
       if (!adoption) return res.status(404).send({ status: "error", error: "Adoption not found" });
       res.send({ status: "success", payload: adoption });
