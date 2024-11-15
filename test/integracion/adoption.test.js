@@ -1,9 +1,12 @@
 import { expect } from "chai";
 import supertest from "supertest";
+import envs from "../../src/config/envs.config.js";
 
-const adoptionRequest = supertest("http://localhost:8080/api/adoptions");
-const userRequest = supertest("http://localhost:8080/api/users");
-const petRequest = supertest("http://localhost:8080/api/pets");
+const PORT = envs.PORT || 8080;
+
+const adoptionRequest = supertest(`http://localhost:${PORT}/api/adoptions`);
+const userRequest = supertest(`http://localhost:${PORT}/api/users`);
+const petRequest = supertest(`http://localhost:${PORT}/api/pets`);
 
 describe("Test de integración Adoptions", () => {
   let testUser;

@@ -2,7 +2,9 @@ import Users from "../../src/dao/Users.dao.js";
 import mongoose from "mongoose";
 import { expect } from "chai";
 
-mongoose.connect("mongodb://localhost:27017/clase-9");
+import envs from "../../src/config/envs.config.js";
+
+mongoose.connect(envs.MONGO_URL);
 
 // Describir nuestro test
 describe("Test UserDao", () => {
